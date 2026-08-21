@@ -1,92 +1,69 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
-    // Default city
-    const cityInput = document.getElementById("cityInput");
-    cityInput.value = "San Francisco";
+    const API_KEY = "j0ABAsmsgMBkSmYiQPCJbQZORzS4yzJu";
 
-    // Simple city → coordinates map
-    const cityCoords = {
-        "San Francisco": { lat: 37.7749, lon: -122.4194 },
-        "New York": { lat: 40.7128, lon: -74.0060 },
-        "Los Angeles": { lat: 34.0522, lon: -118.2437 },
-        "Chicago": { lat: 41.8781, lon: -87.6298 },
-        "Seattle": { lat: 47.6062, lon: -122.3321 }
-    };
+    // San Francisco coordinates
+    const city = "San Francisco";
+    const location = "37.7749,-122.4194";
 
     const weatherText = {
-        0: "Clear",
-        1: "Mainly Clear",
-        2: "Partly Cloudy",
-        3: "Overcast",
-        45: "Fog",
-        48: "Depositing Fog",
-        51: "Light Drizzle",
-        53: "Moderate Drizzle",
-        55: "Heavy Drizzle",
-        61: "Light Rain",
-        63: "Moderate Rain",
-        65: "Heavy Rain",
-        71: "Light Snow",
-        73: "Moderate Snow",
-        75: "Heavy Snow",
-        95: "Thunderstorm"
+        1000: "Clear",
+        1100: "Mostly Clear",
+        1101: "Partly Cloudy",
+        1102: "Mostly Cloudy",
+        1001: "Cloudy",
+        2000: "Fog",
+        2100: "Light Fog",
+        4000: "Rain",
+        4200: "Light Rain",
+        4001: "Heavy Rain",
+        5000: "Snow",
+        5100: "Light Snow",
+        5001: "Flurries"
     };
 
     const weatherIcon = {
-        0: "☀️",
-        1: "🌤️",
-        2: "⛅",
-        3: "☁️",
-        45: "🌫️",
-        48: "🌫️",
-        51: "🌦️",
-        53: "🌦️",
-        55: "🌧️",
-        61: "🌧️",
-        63: "🌧️",
-        65: "🌧️",
-        71: "❄️",
-        73: "❄️",
-        75: "❄️",
-        95: "⛈️"
+        1000: "☀️",
+        1100: "🌤️",
+        1101: "🌤️",
+        1102: "☁️",
+        1001: "☁️",
+        2000: "🌫️",
+        2100: "🌫️",
+        4000: "🌧️",
+        4200: "🌦️",
+        4001: "🌧️",
+        5000: "❄️",
+        5100: "🌨️",
+        5001: "🌨️"
     };
 
-    document.getElementById("searchBtn").addEventListener("click", async () => {
-        const city = cityInput.value.trim();
-        if (!cityCoords[city]) {
-            document.getElementById("error").textContent = "City not supported.";
-            return;
-        }
+    const url =
+        `https://api.tomorrow.io/v4/weather/forecast?location=${location}&apikey=${API_KEY}`;
 
-        const { lat, lon } = cityCoords[city];
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
 
-        const url =
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+        const hourly = data.timelines.hourly[0].values;
 
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
+        const tempC = hourly.temperature;
+        const tempF = (tempC * 1.8 + 32).toFixed(1);
 
-            const w = data.current_weather;
+        const code = hourly.weatherCode;
 
-            const tempF = (w.temperature * 1.8 + 32).toFixed(1);
+        document.getElementById("cityName").textContent = city;
+        document.getElementById("temp").textContent = tempF + " °F";
+        document.getElementById("desc").textContent =
+            weatherIcon[code] + " " + weatherText[code];
 
-            document.getElementById("cityName").textContent = city;
-            document.getElementById("temp").textContent = tempF + " °F";
-            document.getElementById("desc").textContent =
-                weatherIcon[w.weathercode] + " " + weatherText[w.weathercode];
-
-            document.getElementById("weather").style.display = "block";
-            document.getElementById("error").textContent = "";
-        } catch (err) {
-            document.getElementById("error").textContent = "Could not fetch weather.";
-        }
-    });
+        document.getElementById("weather").style.display = "block";
+        document.getElementById("error").textContent = "";
+    } catch (err) {
+        document.getElementById("error").textContent = "Could not fetch weather.";
+    }
 
 });
 
-    });
-
-});
 
 
