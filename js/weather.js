@@ -1,6 +1,10 @@
 	<!----------Weather---JavaScrip>
 document.addEventListener("DOMContentLoaded", function () {
 
+    // Default city
+    const cityInput = document.getElementById("cityInput");
+    cityInput.value = "San Francisco";
+
     const API_KEY = "j0ABAsmsgMBkSmYiQPCJbQZORzS4yzJu";
 
     const weatherText = {
@@ -36,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     document.getElementById("searchBtn").addEventListener("click", async () => {
-        const city = document.getElementById("cityInput").value.trim();
+        const city = cityInput.value.trim();
         if (!city) return;
 
         const url = `https://api.tomorrow.io/v4/weather/forecast?location=${city}&apikey=${API_KEY}`;
@@ -64,4 +68,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
 
