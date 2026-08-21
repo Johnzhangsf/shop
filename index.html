@@ -450,13 +450,18 @@
 	</section>
 	
 <!-- Weather widget BELOW header -->
-<div id="weather" style="display:none; padding:20px; font-size:20px;">
-    <h3 id="cityName"></h3>
-    <div id="temp"></div>
-    <div id="desc"></div>
-    <div id="error" style="color:red;"></div>
-</div>
+<div class="weather-box">
+  <input id="cityInput" type="text" placeholder="Enter city name">
+  <button id="searchBtn">Get Weather</button>
 
+  <div id="error"></div>
+
+  <div id="weather" class="weather-result">
+    <h4 id="cityName"></h4>
+    <p><strong>Temperature:</strong> <span id="temp"></span> °C</p>
+    <p><strong>Condition:</strong> <span id="desc"></span></p>
+  </div>
+</div>
 <!-----------------------------HTML Weather END---->
 
 	<!-- Banner -->
