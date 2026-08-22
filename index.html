@@ -450,18 +450,11 @@
 	</section>
 	
 <!-- Weather widget BELOW header -->
-<div class="weather-box">
-  <input id="cityInput" type="text" placeholder="Enter city name">
-  <button id="searchBtn">Get Weather</button>
 
-  <div id="error"></div>
-
-  <div id="weather" class="weather-result">
-    <h4 id="cityName"></h4>
-    <p><strong>Temperature:</strong> <span id="temp"></span></p>
-    <p><strong>Condition:</strong> <span id="desc"></span></p>
-  </div>
-</div>
+ <h1>Weather Information</h1>
+    <div id="weather-data">
+      <!-- Weather data will be displayed here -->
+    </div>
 
 <!-----------------------------HTML Weather END---->
 
@@ -1734,31 +1727,21 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<!----------Weather---JavaScrip>
 <script>
 const API_KEY = "j0ABAsmsgMBkSmYiQPCJbQZORzS4yzJu";
+      const options = {
+        method: "GET",
+        headers: { accept: "application/json" },
+      };
 
-document.getElementById("searchBtn").addEventListener("click", async () => {
-  const city = document.getElementById("cityInput").value.trim();
-  if (!city) {
-    document.getElementById("error").textContent = "Please enter a city.";
-    return;
-  }
-
-  const url = `https://api.tomorrow.io/v4/weather/forecast?location=San%20Francisco&apikey=j0ABAsmsgMBkSmYiQPCJbQZORzS4yzJu`;
-
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-
-    const hourly = data.timelines.hourly[0].values;
-
-    document.getElementById("cityName").textContent = city;
-    document.getElementById("temp").textContent = hourly.temperature;
-    document.getElementById("desc").textContent = hourly.weatherCode;
-
-    document.getElementById("weather").style.display = "block";
-  } catch (err) {
-    document.getElementById("error").textContent = "Could not fetch weather. Try again.";
-  }
-});
+      fetch(
+        "https://api.tomorrow.io/v4/weather/realtime?location=toronto&apikey=API_KEY",
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          const weatherData = JSON.stringify(response, null, 2);
+          document.getElementById("weather-data").textContent = weatherData;
+        })
+        .catch((err) => console.error(err));
 </script>
 </body>
 </html>
