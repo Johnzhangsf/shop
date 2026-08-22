@@ -7,26 +7,82 @@
   </head>
   <body>
     <h1>Weather Information</h1>
-    <div id="weather-data">
-      <!-- Weather data will be displayed here -->
-    </div>
-    <script>
-         const options = {
-        method: "GET",
-        headers: { accept: "application/json" },
-      };
+<!-- Weather widget placed under logo -->
+<div class="weather-box">
+  <input id="cityInput" type="text" placeholder="Enter city name">
+  <button id="searchBtn">Get Weather</button>
 
-      fetch(
-        "https://api.tomorrow.io/v4/weather/realtime?location=sanfrancisco&apikey=j0ABAsmsgMBkSmYiQPCJbQZORzS4yzJu",
-        options
-      )
-        .then((response) => response.json())
-        .then((response) => {
-          // Handle the response data and display it
-          const weatherData = JSON.stringify(response, null, 2);
-          document.getElementById("weather-data").textContent = weatherData;
-        })
-        .catch((err) => console.error(err));
+  <div id="error"></div>
+
+  <div id="weather" class="weather-result">
+    <h4 id="cityName"></h4>
+    <p><strong>Temperature:</strong> <span id="temp"></span> °C</p>
+    <p><strong>Condition:</strong> <span id="desc"></span></p>
+  </div>
+</div>
+
+    <script>
+const API_KEY = "j0ABAsmsgMBkSmYiQPCJbQZORzS4yzJu";
+
+const weatherText = {
+  1000: "Clear",
+  1100: "Mostly Clear",
+  1101: "Partly Cloudy",
+  1102: "Mostly Cloudy",
+  1001: "Cloudy",
+  2000: "Fog",
+  2100: "Light Fog",
+  4000: "Rain",
+  4200: "Light Rain",
+  4001: "Heavy Rain",
+  5000: "Snow",
+  5100: "Light Snow",
+  5001: "Flurries"
+};
+
+const weatherIcon = {
+  1000: "☀️",
+  1100: "🌤️",
+  1101: "🌤️",
+  1102: "☁️",
+  1001: "☁️",
+  2000: "🌫️",
+  2100: "🌫️",
+  4000: "🌧️",
+  4200: "🌦️",
+  4001: "🌧️",
+  5000: "❄️",
+  5100: "🌨️",
+  5001: "🌨️"
+};
+
+document.getElementById("searchBtn").addEventListener("click", async () => {
+  const city = document.getElementById("cityInput").value.trim();
+  if (!city) return;
+
+  const url = `https://api.tomorrow.io/v4/weather/forecast?location=${city}&apikey=${API_KEY}`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const hourly = data.timelines.hourly[0].values;
+
+    const tempC = hourly.temperature;
+    const tempF = (tempC * 1.8 + 32).toFixed(1);
+
+    const code = hourly.weatherCode;
+
+    document.getElementById("cityName").textContent = city;
+    document.getElementById("temp").textContent = tempF + " °F";
+    document.getElementById("desc").textContent =
+      weatherIcon[code] + " " + weatherText[code];
+
+    document.getElementById("weather").style.display = "block";
+  } catch (err) {
+    document.getElementById("error").textContent = "Could not fetch weather.";
+  }
+});
     </script>
   </body>
 </html>
