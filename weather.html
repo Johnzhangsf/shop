@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather API Example</title>
+  </head>
+  <body>
+    <h1>Weather Information</h1>
+    <div id="weather-data">
+      <!-- Weather data will be displayed here -->
+    </div>
+    <script>
+         const options = {
+        method: "GET",
+        headers: { accept: "application/json" },
+      };
+
+      fetch(
+        "https://api.tomorrow.io/v4/weather/realtime?location=sanfrancisco&apikey=j0ABAsmsgMBkSmYiQPCJbQZORzS4yzJu",
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          // Handle the response data and display it
+          const weatherData = JSON.stringify(response, null, 2);
+          document.getElementById("weather-data").textContent = weatherData;
+        })
+        .catch((err) => console.error(err));
+    </script>
+  </body>
+</html>
