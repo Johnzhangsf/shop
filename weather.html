@@ -18,6 +18,12 @@
     <h4 id="cityName"></h4>
     <p><strong>Temperature:</strong> <span id="temp"></span></p>
     <p><strong>Condition:</strong> <span id="desc"></span></p>
+    <p><strong>Humidty:</strong> <span id="humidty"></span></p>
+    <p><strong>dewPoint:</strong> <span id="dewPoint"></span></p>
+    <p><strong>uvIndex:</strong> <span id="uvIndex"></span></p>
+    <p><strong>windDirection:</strong> <span id="windDirection"></span></p>
+    <p><strong>windSpeed:</strong> <span id="windSpeed"></span></p>
+   
   </div>
 </div>
 
@@ -72,11 +78,21 @@ document.getElementById("searchBtn").addEventListener("click", async () => {
     const tempF = (tempC * 1.8 + 32).toFixed(1);
 
     const code = hourly.weatherCode;
+    const humidty=hourly.humidity;
+    const dewPoint=hourly.dewPoint;
+    const uvIndex=hourly.uvIndex;
+    const windDirection=hourly.windDirection;
+    const windSpeed=hourly.windSpeed;
 
     document.getElementById("cityName").textContent = city;
     document.getElementById("temp").textContent = tempF + " °F";
     document.getElementById("desc").textContent =
       weatherIcon[code] + " " + weatherText[code];
+    document.getElementById("humidty").textContent = humidty;
+    document.getElementById("dewPoint").textContent = dewPoint;
+    document.getElementById("uvIndex").textContent = uvIndex;
+    document.getElementById("windDirection").textContent = windDirection;
+    document.getElementById("windSpeed").textContent = windSpeed;
 
     document.getElementById("weather").style.display = "block";
   } catch (err) {
